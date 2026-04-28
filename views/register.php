@@ -98,6 +98,12 @@
                 <input type="text" name="username" class="form-control" required autocomplete="off">
             </div>
             <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required 
+                       oninvalid="this.setCustomValidity('Isian tidak valid')" 
+                       oninput="this.setCustomValidity('')">
+            </div>
+            <div class="mb-3">
                 <label class="form-label">Password</label>
                 <input type="password" name="password" class="form-control" required>
             </div>

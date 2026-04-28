@@ -37,6 +37,7 @@ class AuthController {
             if (!verify_csrf_token($_POST['csrf_token'])) return "Token CSRF tidak valid!";
 
             $username = trim($_POST['username']);
+            $email = trim($_POST['email']); // Menangkap input email
             $password = $_POST['password'];
             $confirm_password = $_POST['confirm_password'];
 
@@ -44,21 +45,25 @@ class AuthController {
                 return "Username dan Password tidak boleh kosong!";
             }
 
+            // Validasi Email: Harus mengandung '@' dan formatnya valid
+            if (strpos($email, '@') === false || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return "Isian tidak valid";
+            }
+
             if ($password !== $confirm_password) {
                 return "Konfirmasi password tidak cocok!";
             }
 
-            $success = $this->userModel->registerUser($username, $password);
+            // Memasukkan email ke dalam parameter pemanggilan model
+            $success = $this->userModel->registerUser($username, $email, $password);
 
             if ($success) {
-                // Redirect ke halaman login dengan pesan sukses
                 header("Location: index.php?page=login&msg=Registrasi berhasil! Silakan Masuk.");
                 exit;
             } else {
                 return "Username sudah terdaftar, silakan gunakan yang lain!";
             }
         }
-        
         return null;
     }
 

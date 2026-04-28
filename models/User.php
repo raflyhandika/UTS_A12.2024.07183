@@ -16,7 +16,8 @@ class User {
     }
     
     // Mendaftarkan user baru
-    public function registerUser($username, $password) {
+    // Mendaftarkan user baru dengan menyertakan Email
+    public function registerUser($username, $email, $password) {
         // Cek apakah username sudah ada
         $stmtCheck = $this->conn->prepare("SELECT id FROM users WHERE username = ?");
         $stmtCheck->bind_param("s", $username);
@@ -28,9 +29,9 @@ class User {
         // Hash password menggunakan Bcrypt
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         
-        // Simpan ke database
-        $stmt = $this->conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->bind_param("ss", $username, $hashedPassword);
+        // Simpan ke database beserta parameter email
+        $stmt = $this->conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $email, $hashedPassword);
         return $stmt->execute();
     }
 }
